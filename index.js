@@ -17,10 +17,10 @@ function ping() {
         });
 
         response.on('end', () => {
-            if (body.includes('503 Service Unavailable')) {
-                console.log("Page contains 503 Service Unavailable")
+            if (body.includes(config.error)) {
+                console.log("Page contains " + config.error)
             } else {
-                webhook.send('Page contains 503 error').then(() => {
+                webhook.send('Page no longer contains ' + config.error).then(() => {
                     console.log('Webhook sent');
                 });
                 open(config.open);
