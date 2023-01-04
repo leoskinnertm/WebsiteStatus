@@ -6,6 +6,7 @@ const Discord = require('discord-webhook-node');
 const webhook = new Discord.Webhook(config.webhook);
 
 function ping() {
+    config.sites.forEach(function(config) {
     https.get(config.website, (response) => {
         // Set encoding to UTF-8
         response.setEncoding('utf8');
@@ -25,9 +26,10 @@ function ping() {
                 });
                 open(config.open);
             }
-            setTimeout(ping, config.timer); // schedule next request in 30 seconds
         });
     });
+    });
+    setTimeout(ping, config.timer); // schedule next request in 30 seconds
 }
 
 ping(); // start the process
