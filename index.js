@@ -19,10 +19,10 @@ function ping() {
 
         response.on('end', () => {
             if (body.includes(config.error)) {
-                console.log("Page contains " + config.error)
+                console.log(`[${new Date().toLocaleTimeString()}] Page "${config.website}" contains "${config.error}"`);
             } else {
-                webhook.send('Page no longer contains ' + config.error).then(() => {
-                    console.log('Webhook sent');
+                webhook.send(`Page "${config.website}" no longer contains "${config.error}"`).then(() => {
+                    console.log(`[${new Date().toLocaleTimeString()}] Page "${config.website}" no longer contains "${config.error}"`);
                 });
                 open(config.open);
             }
