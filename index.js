@@ -6,6 +6,7 @@ const Discord = require('discord-webhook-node');
 const webhook = new Discord.Webhook(config.webhook);
 
 function ping() {
+    config.sites.forEach(function(config) {
     https.get(config.website, (response) => {
         // Set encoding to UTF-8
         response.setEncoding('utf8');
@@ -17,17 +18,18 @@ function ping() {
         });
 
         response.on('end', () => {
-            if (body.includes('503 Service Unavailable')) {
-                console.log("Page contains 503 Service Unavailable")
+            if (body.includes(config.error)) {
+                console.log(`[${new Date().toLocaleTimeString()}] Page "${config.website}" contains "${config.error}"`);
             } else {
-                webhook.send('Page contains 503 error').then(() => {
-                    console.log('Webhook sent');
+                webhook.send(`Page "${config.website}" no longer contains "${config.error}"`).then(() => {
+                    console.log(`[${new Date().toLocaleTimeString()}] Page "${config.website}" no longer contains "${config.error}"`);
                 });
                 open(config.open);
             }
-            setTimeout(ping, config.timer); // schedule next request in 30 seconds
         });
     });
+    });
+    setTimeout(ping, config.timer); // schedule next request in 30 seconds
 }
 
 ping(); // start the process
